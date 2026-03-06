@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>曹庭瑜的個人網頁</title>
+    <style>
+        /* 基本樣式設定 */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, "Microsoft JhengHei";
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* 導覽列 */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        /* 個人大頭貼區域預留 */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-header h1 {
+            margin: 10px 0;
+            color: #2c3e50;
+        }
+
+        .tag {
+            background: #3498db;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* 分段內容 */
+        section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        section:last-child {
+            border-bottom: none;
+        }
+
+        h2 {
+            color: #2980b9;
+            border-left: 5px solid #2980b9;
+            padding-left: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 10px;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #7f8c8d;
+        }
+
+        /* 興趣區塊 */
+        .hobby-list {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .hobby-item {
+            background: #ecf0f1;
+            padding: 8px 20px;
+            border-radius: 5px;
+            border: 1px solid #bdc3c7;
+        }
+
+        /* 頁尾 */
+        footer {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #95a5a6;
+            margin-top: 2rem;
+            padding-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>個人簡介</h1>
+</header>
+
+<div class="container">
+    <div class="profile-header">
+        <h1>曹庭瑜</h1>
+        <span class="tag">學生 | 軟體開發愛好者</span>
+    </div>
+
+    <section>
+        <h2>基本資料</h2>
+        <div class="info-grid">
+            <div class="label">就讀學校</div>
+            <div>國立金門大學</div>
+            <div class="label">職稱</div>
+            <div>學生</div>
+            <div class="label">家鄉</div>
+            <div>高雄市</div>
+        </div>
+    </section>
+
+    <section>
+        <h2>興趣愛好</h2>
+        <p>在學業之餘，我熱衷於保持健康的生活型態，透過運動來舒緩壓力並挑戰自我：</p>
+        <div class="hobby-list">
+            <div class="hobby-item">💪 健身</div>
+            <div class="hobby-item">🏸 打羽球</div>
+        </div>
+    </section>
+
+    <section>
+        <h2>關於我</h2>
+        <p>
+            您好！我是庭瑜，來自熱情的港都高雄，目前在金門大學就讀。
+            我對技術充滿好奇心，並在生活中尋求平衡，無論是在重訓室挑戰重量，還是在羽球場上揮灑汗水，
+            都是我充實自我的一部分。
+        </p>
+    </section>
+</div>
+
+<footer>
+    <p>&copy; 2026 曹庭瑜 個人網頁版權所有</p>
+</footer>
+
+</body>
+</html>
