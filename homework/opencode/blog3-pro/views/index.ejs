@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Threads</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+    }
+    .container {
+      display: flex;
+      max-width: 1200px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 280px;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      border-right: 1px solid #2d2d2d;
+    }
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      padding: 20px 0 40px 10px;
+      font-family: 'Georgia', serif;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      font-size: 18px;
+      border-radius: 30px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+      color: #fff;
+    }
+    .nav-item:hover { background: #1a1a1a; }
+    .nav-item.active { font-weight: 700; }
+    .nav-icon { width: 28px; height: 28px; margin-right: 20px; }
+    .profile-section {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      padding: 16px;
+      border-top: 1px solid #2d2d2d;
+      display: flex;
+      align-items: center;
+    }
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6644ff, #ff44aa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      margin-right: 12px;
+    }
+    .profile-info { flex: 1; }
+    .profile-name { font-weight: 600; font-size: 15px; }
+    .profile-username { color: #888; font-size: 14px; }
+
+    .main-content {
+      flex: 1;
+      max-width: 600px;
+      border-right: 1px solid #2d2d2d;
+    }
+    .feed-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #2d2d2d;
+      position: sticky;
+      top: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(10px);
+      z-index: 10;
+    }
+    .feed-title { font-size: 20px; font-weight: 700; }
+
+    .post-compose {
+      padding: 20px;
+      border-bottom: 1px solid #2d2d2d;
+    }
+    .compose-row { display: flex; }
+    .compose-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6644ff, #ff44aa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      margin-right: 16px;
+      flex-shrink: 0;
+    }
+    .compose-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 18px;
+      outline: none;
+    }
+    .compose-input::placeholder { color: #666; }
+    .compose-btn {
+      background: #fff;
+      color: #000;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 16px;
+    }
+
+    .post {
+      padding: 20px;
+      border-bottom: 1px solid #2d2d2d;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .post:hover { background: #0a0a0a; }
+    .post-row { display: flex; }
+    .post-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6644ff, #ff44aa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      margin-right: 16px;
+      flex-shrink: 0;
+    }
+    .post-content { flex: 1; }
+    .post-header { margin-bottom: 8px; }
+    .post-name { font-weight: 700; margin-right: 8px; }
+    .post-name-link { text-decoration: none; color: inherit; }
+    .post-name-link:hover { text-decoration: underline; }
+    .post-avatar-link { text-decoration: none; }
+    .post-username { color: #666; }
+    .post-time { color: #666; font-size: 14px; }
+    .post-text {
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+      white-space: pre-wrap;
+    }
+    .post-actions {
+      display: flex;
+      gap: 16px;
+      color: #666;
+    }
+    .post-action { cursor: pointer; display: flex; align-items: center; gap: 8px; }
+
+    .empty-state {
+      padding: 60px 20px;
+      text-align: center;
+      color: #666;
+    }
+
+    .right-sidebar {
+      width: 350px;
+      padding: 20px;
+      display: none;
+    }
+    @media (min-width: 1024px) {
+      .right-sidebar { display: block; }
+    }
+
+    .suggestion-box {
+      background: #161616;
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .suggestion-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <div class="logo">Threads</div>
+      <a href="/" class="nav-item <%= page === 'home' ? 'active' : '' %>">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        首頁
+      </a>
+      <a href="/explore" class="nav-item <%= page === 'explore' ? 'active' : '' %>">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        探索
+      </a>
+
+      <div class="profile-section">
+        <div class="avatar"><%= user ? user.username.charAt(0).toUpperCase() : '?' %></div>
+        <div class="profile-info">
+          <div class="profile-name"><%= user ? user.username : '' %></div>
+          <div class="profile-username">@<%= user ? user.username.toLowerCase() : '' %></div>
+        </div>
+        <a href="/logout" style="color: #888; text-decoration: none; font-size: 14px;">登出</a>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="feed-header">
+        <div class="feed-title"><%= page === 'home' ? '我的動態' : '探索' %></div>
+      </div>
+
+      <div class="post-compose">
+        <div class="compose-row">
+          <div class="compose-avatar"><%= user ? user.username.charAt(0).toUpperCase() : '?' %></div>
+          <input type="text" class="compose-input" placeholder="分享你的想法..." onclick="window.location='/new'">
+        </div>
+        <button class="compose-btn" onclick="window.location='/new'">發布</button>
+      </div>
+
+      <% if (posts.length === 0) { %>
+        <div class="empty-state">
+          <p style="font-size: 18px; margin-bottom: 8px;">還沒有貼文</p>
+          <p><%= page === 'home' ? '發布你的第一則貼文吧！' : '追蹤用戶以查看他們的貼文' %></p>
+        </div>
+      <% } %>
+
+      <% posts.forEach(post => { %>
+        <div class="post" onclick="window.location='/post/<%= post.id %>'">
+          <div class="post-row">
+            <a href="/profile/<%= post.user_id %>" onclick="event.stopPropagation()" class="post-avatar-link">
+              <div class="post-avatar"><%= post.username ? post.username.charAt(0).toUpperCase() : '?' %></div>
+            </a>
+            <div class="post-content">
+              <div class="post-header">
+                <a href="/profile/<%= post.user_id %>" onclick="event.stopPropagation()" class="post-name-link">
+                  <span class="post-name"><%= post.username %></span>
+                </a>
+                <span class="post-username">@<%= post.username ? post.username.toLowerCase() : '' %></span>
+                <span class="post-time"> · <%= new Date(post.created_at).toLocaleDateString('zh-TW') %></span>
+              </div>
+              <div class="post-text"><%= post.content %></div>
+              <div class="post-actions">
+                <div class="post-action">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                  <span>0</span>
+                </div>
+                <div class="post-action">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z"/></svg>
+                  <span>0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <div class="right-sidebar">
+      <div class="suggestion-box">
+        <div class="suggestion-title">為你推薦</div>
+        <p style="color: #666;">登入後可見更多推薦內容</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

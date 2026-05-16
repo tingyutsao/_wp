@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= profileUser.username %> - Threads</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+    }
+    .container {
+      display: flex;
+      max-width: 1200px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+    .sidebar {
+      width: 280px;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      border-right: 1px solid #2d2d2d;
+    }
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      padding: 20px 0 40px 10px;
+      font-family: 'Georgia', serif;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      font-size: 18px;
+      border-radius: 30px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+      color: #fff;
+    }
+    .nav-item:hover { background: #1a1a1a; }
+    .back-btn {
+      display: flex;
+      align-items: center;
+      padding: 16px;
+      font-size: 18px;
+      border-radius: 30px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      color: #fff;
+      text-decoration: none;
+    }
+    .back-btn:hover { background: #1a1a1a; }
+    .nav-icon { width: 28px; height: 28px; margin-right: 20px; }
+
+    .profile-section {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+      padding: 16px;
+      border-top: 1px solid #2d2d2d;
+      display: flex;
+      align-items: center;
+    }
+    .avatar-small {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6644ff, #ff44aa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 18px;
+      margin-right: 12px;
+    }
+    .profile-info { flex: 1; }
+    .profile-name { font-weight: 600; font-size: 15px; }
+    .profile-username { color: #888; font-size: 14px; }
+
+    .main-content {
+      flex: 1;
+      max-width: 600px;
+      border-right: 1px solid #2d2d2d;
+    }
+    .profile-header {
+      padding: 20px;
+      border-bottom: 1px solid #2d2d2d;
+    }
+    .profile-avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6644ff, #ff44aa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 40px;
+      margin-bottom: 16px;
+    }
+    .profile-display-name {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .profile-handle {
+      color: #666;
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+    .profile-joined {
+      color: #666;
+      font-size: 14px;
+    }
+    .profile-stats {
+      display: flex;
+      gap: 24px;
+      margin-top: 16px;
+    }
+    .stat-item { color: #fff; }
+    .stat-item span { color: #666; }
+
+    .post {
+      padding: 20px;
+      border-bottom: 1px solid #2d2d2d;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .post:hover { background: #0a0a0a; }
+    .post-row { display: flex; }
+    .post-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6644ff, #ff44aa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+      margin-right: 16px;
+      flex-shrink: 0;
+    }
+    .post-content { flex: 1; }
+    .post-header { margin-bottom: 8px; }
+    .post-name { font-weight: 700; margin-right: 8px; }
+    .post-username { color: #666; }
+    .post-time { color: #666; font-size: 14px; }
+    .post-text {
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 12px;
+      white-space: pre-wrap;
+    }
+    .post-actions {
+      display: flex;
+      gap: 16px;
+      color: #666;
+    }
+    .post-action { cursor: pointer; display: flex; align-items: center; gap: 8px; }
+
+    .empty-state {
+      padding: 60px 20px;
+      text-align: center;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <div class="logo">Threads</div>
+      <a href="/" class="back-btn">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        返回
+      </a>
+
+      <div class="profile-section">
+        <div class="avatar-small"><%= user ? user.username.charAt(0).toUpperCase() : '?' %></div>
+        <div class="profile-info">
+          <div class="profile-name"><%= user ? user.username : '' %></div>
+          <div class="profile-username">@<%= user ? user.username.toLowerCase() : '' %></div>
+        </div>
+        <a href="/logout" style="color: #888; text-decoration: none; font-size: 14px;">登出</a>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="profile-header">
+        <div class="profile-avatar"><%= profileUser.username.charAt(0).toUpperCase() %></div>
+        <div class="profile-display-name"><%= profileUser.username %></div>
+        <div class="profile-handle">@<%= profileUser.username.toLowerCase() %></div>
+        <div class="profile-joined">加入於 <%= new Date(profileUser.created_at).toLocaleDateString('zh-TW', { year: 'numeric', month: 'long' }) %></div>
+        <div class="profile-stats">
+          <div class="stat-item"><%= posts.length %> <span>貼文</span></div>
+        </div>
+      </div>
+
+      <% if (posts.length === 0) { %>
+        <div class="empty-state">
+          <p>尚無貼文</p>
+        </div>
+      <% } %>
+
+      <% posts.forEach(post => { %>
+        <div class="post" onclick="window.location='/post/<%= post.id %>'">
+          <div class="post-row">
+            <div class="post-avatar"><%= post.username ? post.username.charAt(0).toUpperCase() : '?' %></div>
+            <div class="post-content">
+              <div class="post-header">
+                <span class="post-name"><%= post.username %></span>
+                <span class="post-username">@<%= post.username ? post.username.toLowerCase() : '' %></span>
+                <span class="post-time"> · <%= new Date(post.created_at).toLocaleDateString('zh-TW') %></span>
+              </div>
+              <div class="post-text"><%= post.content %></div>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</body>
+</html>
