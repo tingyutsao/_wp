@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title><%= post.title %></title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+    .btn { background: #666; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; }
+    .btn-delete { background: #cc0000; }
+  </style>
+</head>
+<body>
+  <a href="/">&larr; 回首頁</a>
+  <h1><%= post.title %></h1>
+  <p class="post-meta"><%= new Date(post.created_at).toLocaleString('zh-TW') %></p>
+  <hr>
+  <div><%- post.content %></div>
+  <hr>
+  <form action="/post/<%= post.id %>/delete" method="POST" style="display:inline;">
+    <button type="submit" class="btn btn-delete" onclick="return confirm('確定刪除？')">刪除</button>
+  </form>
+</body>
+</html>

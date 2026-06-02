@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>我的網誌</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+    h1 { color: #333; }
+    .post { border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+    .post h2 { margin-top: 0; }
+    .post a { text-decoration: none; color: #0066cc; }
+    .post-meta { color: #666; font-size: 0.9em; }
+    .btn { background: #0066cc; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; }
+  </style>
+</head>
+<body>
+  <h1>我的網誌</h1>
+  <a href="/new" class="btn">新增文章</a>
+  <% if (posts.length === 0) { %>
+    <p>尚無文章。</p>
+  <% } %>
+  <% posts.forEach(post => { %>
+    <div class="post">
+      <h2><a href="/post/<%= post.id %>"><%= post.title %></a></h2>
+      <p class="post-meta"><%= new Date(post.created_at).toLocaleString('zh-TW') %></p>
+      <%- post.content.substring(0, 200) %>...
+      <br><br>
+      <a href="/post/<%= post.id %>">閱讀更多</a>
+    </div>
+  <% }) %>
+</body>
+</html>

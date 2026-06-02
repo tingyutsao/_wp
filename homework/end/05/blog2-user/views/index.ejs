@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>我的網誌</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+    h1 { color: #333; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .nav a { margin-left: 15px; text-decoration: none; color: #0066cc; }
+    .post { border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+    .post h2 { margin-top: 0; }
+    .post a { text-decoration: none; color: #0066cc; }
+    .post-meta { color: #666; font-size: 0.9em; }
+    .btn { background: #0066cc; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; }
+    .author { color: #888; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>我的網誌</h1>
+    <div class="nav">
+      <% if (user) { %>
+        <span>歡迎，<%= user.username %></span>
+        <a href="/new">新增文章</a>
+        <a href="/logout">登出</a>
+      <% } else { %>
+        <a href="/login">登入</a>
+        <a href="/register">註冊</a>
+      <% } %>
+    </div>
+  </div>
+  <% if (posts.length === 0) { %>
+    <p>尚無文章。</p>
+  <% } %>
+  <% posts.forEach(post => { %>
+    <div class="post">
+      <h2><a href="/post/<%= post.id %>"><%= post.title %></a></h2>
+      <p class="post-meta">
+        <%= new Date(post.created_at).toLocaleString('zh-TW') %>
+        <% if (post.username) { %> | 作者: <%= post.username %> <% } %>
+      </p>
+      <%- post.content.substring(0, 200) %>...
+      <br><br>
+      <a href="/post/<%= post.id %>">閱讀更多</a>
+    </div>
+  <% }) %>
+</body>
+</html>
